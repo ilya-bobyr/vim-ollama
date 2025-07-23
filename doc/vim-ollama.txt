@@ -282,14 +282,42 @@ You can configure vim-ollama using the following variables in your .vimrc:
 >
         let g:ollama_debounce_time = 300
 <
-8. g:ollama_chat_model
+8. g:ollama_completion_allowlist_filetype
+    - Description: If non-empty, then completion will only be triggered for
+      buffers with these file types (See 'filetype').
+
+      You should set this, if you prefer completion to be disabled for any
+      file type, except the ones that you listed. You can still trigger
+      completion with the `<Plug>(ollama-trigger-completion)` mapping.
+    - Default: []
+    - Example:
+>
+        let g:ollama_completion_allowlist_filetype = ['cpp', 'haskell']
+<
+9. g:ollama_completion_denylist_filetype
+    - Description: If non-empty, then completion will only be triggered for
+      buffers with these file types (See 'filetype').
+
+      This only affects the automatic completion suggestion, triggered by
+      `g:ollama_debounce_time`. You can always trigger completion manually
+      with the `<Plug>(ollama-trigger-completion)` mapping.
+
+      It probably makes sense to disable completion, for example, in the
+      fuzzyfinder plugin window.  But depending on the other plugins you have
+      available, you may want to add other filetypes as well.
+    - Default: []
+    - Example:
+>
+        let g:ollama_completion_denylist_filetype = ['fuf']
+<
+10. g:ollama_chat_model
     - Description: Sets the default Ollama model to use for interactive chats.
     - Default: 'llama3'
     - Example:
 >
         let g:ollama_chat_model = 'gpt4-turbo'
 <
-9. g:ollama_chat_systemprompt
+11. g:ollama_chat_systemprompt
     - Description: Allows overriding the system prompt of the chat model. If
       not specified the models default system prompt will be used.
     - Default: ''
@@ -298,7 +326,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
         let g:ollama_chat_systemprompt = 'You are a coding assistant. Output
         only code, no explanations.'
 <
-10. g:ollama_chat_options
+12. g:ollama_chat_options
     - Description: Sets the default Ollama model options for chat models.
     - Default: '{"temperature": 0, "top_p": 0.95}'
     - Example:
@@ -308,21 +336,21 @@ You can configure vim-ollama using the following variables in your .vimrc:
                 \ 'top_p': 0.95
                 \ }
 <
-11. g:ollama_chat_timeout
+13. g:ollama_chat_timeout
     - Description: Sets the timeout value in chat requests.
     - Default: 10
     - Example:
 >
         let g:ollama_chat_timeout = 10
 <
-12. g:ollama_edit_model
+14. g:ollama_edit_model
     - Description: Sets the default Ollama model to use for code editing.
     - Default: 'qwen2.5-coder:7b'
     - Example:
 >
         let g:ollama_chat_model = 'qwen2.5-coder:7b'
 <
-13. g:ollama_edit_options
+15. g:ollama_edit_options
     - Description: Sets the default Ollama model options for code edit models.
     - Default: '{"temperature": 0, "top_p": 0.95}'
     - Example:
@@ -333,7 +361,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
                 \ 'num_predict': 256
                 \ }
 <
-14. g:ollama_use_inline_diff
+16. g:ollama_use_inline_diff
     - Description: When true, the `OllamaEdit` changes are applied as inline
       diff which can be accepted or rejected individually in an interactive
       way. When false, the plugin will apply the changes directly without
@@ -345,7 +373,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
 >
         let g:ollama_use_inline_diff = 0
 <
-15. g:ollama_no_maps
+17. g:ollama_no_maps
     - Description: Disables all default mappings except for `<tab>` which has
       a built-in fallback mechanism. This can be useful to avoid conflicts
       with other plugins and to define your own mappings for vim-ollama.
@@ -354,7 +382,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
 >
         let g:ollama_no_maps = 1
 <
-16. g:ollama_no_tab_map
+18. g:ollama_no_tab_map
     - Description: If this variable is defined, the default <tab> mapping
       will not be created.
     - Default: undefined
@@ -365,7 +393,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
         inoremap ,w <Plug>(ollama-insert-word)
         inoremap ,l <Plug>(ollama-insert-line)
 <
-17. g:ollama_use_venv
+19. g:ollama_use_venv
     - Description: Enables the usage of python virtual environments for
       executing the required python scripts. If enabled it will install
       the required packages automatically in this vim-ollama specific
@@ -376,7 +404,7 @@ You can configure vim-ollama using the following variables in your .vimrc:
 >
         let g:ollama_use_venv = 1
 <
-18. g:ollama_split_vertically
+20. g:ollama_split_vertically
     - Description: When this variable is defined and set to 1 the OllamaChat
       command will create a vertical split, otherwise a horizontal split is
       used.
