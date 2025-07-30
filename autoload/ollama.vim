@@ -119,6 +119,11 @@ endfunction
 
 " Constructs a prompt for the completion request.
 function! s:ConstructPrompt()
+    let l:context = ollama#context#ConstructCompletionContext()
+    if l:context != ''
+      let l:context ..= "\n"
+    endif
+
     let l:line = line('.')
     let l:col = col('.')
     let l:context_lines = g:ollama_context_lines
@@ -140,7 +145,7 @@ function! s:ConstructPrompt()
     endif
     let l:suffix ..= join(l:suffix_lines, "\n")
 
-    return l:prefix .. '<FILL_IN_HERE>' .. l:suffix
+    return l:context .. l:prefix .. '<FILL_IN_HERE>' .. l:suffix
 endfunction
 
 function! ollama#GetSuggestion(timer)

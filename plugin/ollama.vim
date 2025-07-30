@@ -285,4 +285,7 @@ function! PluginInit() abort
     endif
 endfunction
 
+" Load other parts of the plugin.
+source <sfile>:p:h/context.vim
+
 call PluginInit()
