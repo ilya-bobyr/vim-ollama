@@ -160,4 +160,3 @@ function! ollama#config#ShowHelp() abort
 endfunction
 
 " vim: filetype=vim
-
