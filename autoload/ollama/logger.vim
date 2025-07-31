@@ -50,12 +50,32 @@ endfunction
 
 let s:level_prefixes = ['', '[ERROR] ', '[WARN] ', '[INFO] ', '[DEBUG] ', '[DEBUG] ']
 
-function! ollama#logger#Raw(level, message) abort
+function! ollama#logger#Raw(level, messages) abort
   if a:level > g:ollama_debug
      return
   endif
-  let lines = type(a:message) == v:t_list ? copy(a:message) : split(a:message, "\n", 1)
-  let lines[0] = strftime('[%Y-%m-%d %H:%M:%S] ') . get(s:level_prefixes, a:level, '[UNKNOWN] ') . get(lines, 0, '')
+
+  " Allow `a:messages` to be a string.  Though all the `ollama#logger#*`
+  " functions pass a list in.
+  let messages = type(a:messages) == v:t_list ? a:messages : [a:messages]
+
+  " `writefile()` will replace all new lines with NUL character, so in order to
+  " preserve new lines we need to split all messages on the "\n" character.
+  let lines = []
+  for message in messages
+    if type(message) == v:t_list
+      let lines += messages
+    elseif type(message) == v:t_string
+      let lines += split(message, "\n", 1)
+    else
+      call add(lines, string(message))
+    endif
+  endfor
+
+  let lines[0] = strftime('[%Y-%m-%d %H:%M:%S] ')
+        \ .. get(s:level_prefixes, a:level, '[UNKNOWN] ')
+        \ .. get(lines, 0, '')
+
   try
     if filewritable(g:ollama_logfile)
       call writefile(lines, g:ollama_logfile, 'a')
